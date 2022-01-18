@@ -7,6 +7,7 @@ use App\Repository\CustomerRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
@@ -18,8 +19,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *  normalizationContext={
  *      "groups"={"customers_read"}
  *  },
- *  collectionOperations={"GET"={"path"="/clients"},"POST"},
- *  itemOperations={"GET"={"path"="/clients/{id}"},"PUT","DELETE","PATCH"}
+ *  collectionOperations={"GET","POST"},
+ *  itemOperations={"GET","PUT","DELETE","PATCH"},
+ *  subresourceOperations={
+ *      "invoices_get_subresource"={"path"="/customers/{id}/invoices"}
+ *  }
  * )
  * @ApiFilter(SearchFilter::class, properties={"firstName":"partial","lastName","company"})
  * @ApiFilter(OrderFilter::class)
@@ -61,6 +65,7 @@ class Customer
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="customer")
      * @Groups({"customers_read","users_read"})
+     * @ApiSubresource
      */
     private $invoices;
 
