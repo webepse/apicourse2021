@@ -17,7 +17,9 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * @ApiResource(
  *  normalizationContext={
  *      "groups"={"customers_read"}
- *  }
+ *  },
+ *  collectionOperations={"GET"={"path"="/clients"},"POST"},
+ *  itemOperations={"GET"={"path"="/clients/{id}"},"PUT","DELETE","PATCH"}
  * )
  * @ApiFilter(SearchFilter::class, properties={"firstName":"partial","lastName","company"})
  * @ApiFilter(OrderFilter::class)
