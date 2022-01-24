@@ -9,8 +9,12 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
+
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
@@ -19,6 +23,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *  normalizationContext={"groups"={"users_read"}}
  * )
  * @ApiFilter(SearchFilter::class, properties={"customers.firstName":"partial"})
+ * @UniqueEntity("email", message="Un utilisateur ayant cette adresse email existe déjà")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -33,6 +38,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Groups({"customers_read","invoices_read","users_read","invoices_subresource"})
+     * @Assert\NotBlank(message="L'émail doit être renseignée")
+     * @Assert\Email(message="L'email doit être valide")
      */
     private $email;
 
@@ -45,24 +52,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Le mot de passe est obligatoire")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read","invoices_read","users_read","invoices_subresource"})
+     * @Assert\NotBlank(message="Le prénom est obligatoire")
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read","invoices_read","users_read","invoices_subresource"})
+     * @Assert\NotBlank(message="Le nom est obligatoire")
      */
     private $lastName;
 
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="user")
      * @Groups({"users_read"})
+     * @Assert\NotBlank(message="Le client est obligatoire")
      */
     private $customers;
 
