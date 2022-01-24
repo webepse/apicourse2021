@@ -73,7 +73,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\OneToMany(targetEntity=Customer::class, mappedBy="user")
      * @Groups({"users_read"})
-     * @Assert\NotBlank(message="Le client est obligatoire")
      */
     private $customers;
 
